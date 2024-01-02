@@ -132,6 +132,23 @@
       );
     });
   }
+
+  const copyHTML = () => {
+    const container = document.querySelector(".container");
+    const containerClone = container.cloneNode(true);
+    const buttonToRemove = containerClone.querySelector("button");
+    if (buttonToRemove) {
+      buttonToRemove.remove();
+    }
+    const htmlToCopy = containerClone.outerHTML;
+
+    const textarea = document.createElement("textarea");
+    textarea.value = htmlToCopy;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  };
 </script>
 
 <div class="container my-5">
@@ -149,6 +166,8 @@
     {:else if query.type === QueryType.LIST}
       <TogglListReport {detailed} {query} />
     {/if}
+    <!-- Button to copy HTML -->
+    <button on:click={copyHTML}>Copy HTML</button>
   {/if}
 
   {#if !ready && !hasError}
