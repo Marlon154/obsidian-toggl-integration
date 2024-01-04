@@ -8,7 +8,7 @@
     tag,
   } from "lib/reports/ReportQuery";
   import { togglService } from "lib/util/stores";
-  import { onMount } from "svelte";
+  import { onMount, afterUpdate } from "svelte";
   import ParsingError from "./ParsingError.svelte";
   import ApiError from "./ApiError.svelte";
   import TogglSummaryReport from "./TogglSummaryReport.svelte";
@@ -149,6 +149,18 @@
     document.execCommand("copy");
     document.body.removeChild(textarea);
   };
+
+  afterUpdate(() => {
+    const container = document.querySelector(".container");
+    const containerClone = container.cloneNode(true);
+
+    const buttonToRemove = containerClone.querySelector("button");
+    if (buttonToRemove) {
+      buttonToRemove.remove();
+    }
+
+    htmlToCopy = containerClone.outerHTML;
+  });
 </script>
 
 <div class="container my-5">
