@@ -1,5 +1,10 @@
 [![GitHub tag (Latest by date)](https://img.shields.io/github/v/tag/mcndt/obsidian-toggl-integration)](https://github.com/mcndt/obsidian-toggl-integration/releases) ![GitHub all releases](https://img.shields.io/github/downloads/mcndt/obsidian-toggl-integration/total)
 
+This is a fork of the original (Toggl Track Integration for Obsidian)(https://github.com/mcndt/obsidian-toggl-integration).
+It adds following features:
+- Add a copy button to duplicate and permanently save the HTML in Obsidian
+- Total time for List reports
+
 # Toggl Track Integration for Obsidian
 
 Add integration with the Toggl Track API to manage your timers inside Obsidian.
