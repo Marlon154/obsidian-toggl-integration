@@ -17,15 +17,28 @@
 
   let _listGroups: ReportListGroupData[] = [];
 
+  let totalTime: number = 0;
+
   $: if (query && detailed) {
     try {
       _error = null;
       sanitizeData(detailed);
       _listGroups = getListGroups(detailed, query);
+      totalTime = calculateTotalTime(_listGroups);
     } catch (err) {
       _error = err.stack;
       console.error(err);
     }
+  }
+
+  function calculateTotalTime(groups: ReportListGroupData[]): number {
+    let totalTime = 0;
+    groups.forEach((group) => {
+      group.data.forEach((entry) => {
+        totalTime += entry.totalTime;
+      });
+    });
+    return totalTime;
   }
 
   function getListGroups(
@@ -229,6 +242,10 @@
     });
   }
 </script>
+
+<div>
+  <p>Total Time: {totalTime} seconds</p>
+</div>
 
 {#if _error}
   <JsError message={_error} />
