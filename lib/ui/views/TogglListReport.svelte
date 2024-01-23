@@ -41,6 +41,17 @@
     return totalTime;
   }
 
+  function formatTime(seconds: number): string {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+    return formattedTime;
+  }
+
   function getListGroups(
     detailed: EnrichedDetailedReportItem[],
     query: Query,
@@ -243,8 +254,15 @@
   }
 </script>
 
-<div>
-  <p>Total Time: {totalTime} seconds</p>
+<div
+  class="time-entry-group-header is-flex is-justify-content-space-between pb-1 mb-2"
+>
+  <div class="is-flex is-align-items-center">
+    <h4>Total Time</h4>
+  </div>
+  <div>
+    <h4>{formatTime(totalTime)}</h4>
+  </div>
 </div>
 
 {#if _error}
