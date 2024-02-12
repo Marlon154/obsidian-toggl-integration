@@ -6,5 +6,5 @@
 	"description": "Manage timers and generate time reports using Toggl Track without leaving Obsidian.",
 	"author": "Maxime Cannoodt (@mcndt)",
 	"authorUrl": "https://mcndt.github.io/",
-	"isDesktopOnly": true
+	"isDesktopOnly": false
 }

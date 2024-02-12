@@ -13,6 +13,7 @@
   import ApiError from "./ApiError.svelte";
   import TogglSummaryReport from "./TogglSummaryReport.svelte";
   import TogglListReport from "./TogglListReport.svelte";
+  import TogglTimeTable from "./TogglTimeTable.svelte";
   import LoadingAnimation from "../components/LoadingAnimation.svelte";
   import { ISODateFormat, Keyword, Token } from "lib/reports/parser/Parser";
   import { tokenize } from "lib/reports/parser/Tokenize";
@@ -33,6 +34,7 @@
   let parseError: string;
   let query: Query;
   let summaryStore: SummaryReportStore;
+  let tableData: string;
   let title: string;
 
   let hasError = false;
@@ -43,6 +45,8 @@
       ready = !!summaryStore;
     } else if (query.type === QueryType.LIST) {
       ready = !!detailed;
+    } else if (query.type === QueryType.TABLE) {
+      ready = !!tableData;
     }
   }
 
@@ -62,6 +66,9 @@
       } else if (query.type === QueryType.LIST) {
         const report = await getDetailedReport(query);
         detailed = filterDetailedReport(report, query);
+      } else if (query.type === QueryType.TABLE) {
+        const table = await getDetailedReport(query);
+        tableData = await getTableData(query);
       }
     } catch (err) {
       apiError = err.message;
@@ -103,6 +110,53 @@
 
   async function getSummaryReport(query: Query) {
     return $togglService.getSummaryReport(query);
+  }
+
+  async function getTableData(query: Query) {
+    // Assuming togglService has a method to get time entries that we can use to fetch data for the table
+    const timeEntries = await $togglService.getTimeEntries(
+      query.from,
+      query.to,
+    );
+
+    // Transform the time entries into a format suitable for the table component
+    const tableData = transformToTableData(timeEntries);
+
+    return tableData;
+  }
+
+  function transformToTableData(timeEntries) {
+    // Transform the raw time entries from Toggl into a structure that your table component can render.
+    // This will likely involve grouping entries by date, and then by project or tag based on your UI's needs.
+
+    // This is a placeholder transformation function. You will need to replace it with your actual data structure.
+    const groupedByDate = groupTimeEntriesByDate(timeEntries);
+
+    return groupedByDate;
+  }
+
+  function groupTimeEntriesByDate(timeEntries) {
+    // Group time entries by their start date
+    const grouped = timeEntries.reduce((acc, entry) => {
+      const entryDate = moment(entry.start).format("YYYY-MM-DD");
+      if (!acc[entryDate]) {
+        acc[entryDate] = [];
+      }
+      acc[entryDate].push({
+        start: entry.start,
+        end: entry.end,
+        description: entry.description,
+        projectId: entry.project_id,
+        // Add more properties as needed
+      });
+      return acc;
+    }, {});
+
+    // Transform into an array if needed or any other structure that your component expects
+    return Object.entries(grouped).map(([date, entries]) => ({
+      date,
+      entries,
+    }));
   }
 
   function filterDetailedReport(
@@ -148,6 +202,8 @@
       <TogglSummaryReport {title} {summaryStore} {query} />
     {:else if query.type === QueryType.LIST}
       <TogglListReport {detailed} {query} />
+    {:else if query.type === QueryType.TABLE}
+      <TogglTimeTable {tableData} {query} /> <!-- Render the table view -->
     {/if}
   {/if}
 

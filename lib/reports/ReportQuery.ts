@@ -4,10 +4,11 @@ export type tag = string;
 export enum QueryType {
   SUMMARY = "SUMMARY",
   LIST = "LIST",
+  TABLE = "TABLE",  // Added TABLE type for time table view
 }
 
 /**
- * Data required to fullfill a Toggl Report query.
+ * Data required to fulfill a Toggl Report query.
  */
 export interface Query {
   type: QueryType;
@@ -29,10 +30,12 @@ export interface Query {
   groupBy?: GroupBy;
   /** User-defined title for the rendered report. */
   customTitle?: string;
+  /** Optional, indicates the resolution for table reports (day, week, month). */
+  tableResolution?: TableResolution; // Added for table view
 }
 
 /**
- * Subset to select when fullfilling the Toggl report query.
+ * Subset to select when fulfilling the Toggl report query.
  * e.g. to exclude certain projects
  */
 export interface Selection {
@@ -69,4 +72,13 @@ export enum GroupBy {
   CLIENT = "CLIENT",
   /** Group list of time entries by date. */
   DATE = "DATE",
+}
+
+export enum TableResolution {
+  /** The table view should display time entries by day. */
+  DAY = "DAY",
+  /** The table view should display time entries by week. */
+  WEEK = "WEEK",
+  /** The table view should display time entries by month. */
+  MONTH = "MONTH",
 }
